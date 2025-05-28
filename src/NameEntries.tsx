@@ -1,12 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import {
   Box,
   Button,
   Flex,
   Input,
-  Heading,
   Text,
-  Dialog,
   DialogRoot,
   DialogTrigger,
   DialogBackdrop,
@@ -82,15 +80,11 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
   };
 
   const onSelectWinner = (winner: string) => {
-    console.log(`Winner announced: ${winner}`); // Debugging log
     const winnerElement = document.querySelector(
       `[data-name="${winner}"]`
     ) as HTMLElement | null;
     if (winnerElement) {
-      console.log("Applying winning animation to:", winnerElement); // Debugging log
       applyWinningAnimation(winnerElement);
-    } else {
-      console.error("Winner element not found for:", winner); // Debugging log
     }
   };
 
