@@ -12,12 +12,12 @@ export default defineConfig({
       output: {
         assetFileNames: (assetInfo) => {
           if (assetInfo.name?.endsWith(".wav")) {
-            return "./[name].[ext]"; // Update path to './' for sounds
+            return "sounds/[name].[ext]"; // Ensure sounds folder is correctly referenced
           }
           return "assets/[name].[ext]";
         },
       },
     },
   },
-  publicDir: "sounds", // Ensure sounds directory is copied to dist
+  publicDir: "public", // Ensure public directory is copied to dist
 });
