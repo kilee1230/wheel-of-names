@@ -83,7 +83,10 @@ export const Wheel: React.FC<WheelProps> = ({
       ctx.translate(wheelRadius / 2 + 10, 0);
       ctx.rotate(Math.PI / 2);
 
-      const fontSize = Math.min(16, 180 / Math.max(5, numSlices));
+      const fontSize =
+        window.innerWidth > 768
+          ? Math.min(20, 200 / Math.max(5, numSlices))
+          : Math.min(16, 180 / Math.max(5, numSlices));
       ctx.font = `${fontSize}px Arial, sans-serif`;
       ctx.fillStyle = settings.darkMode ? "white" : "black";
       ctx.textAlign = "center";
@@ -150,9 +153,14 @@ export const Wheel: React.FC<WheelProps> = ({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const size = canvas.width;
-    canvas.height = size; // Ensure height matches width for a perfect circle
-    ctx.clearRect(0, 0, size, size);
+    const size = canvas.offsetWidth; // Use offsetWidth for consistent sizing
+    const devicePixelRatio = window.devicePixelRatio || 1;
+    canvas.width = size * devicePixelRatio;
+    canvas.height = size * devicePixelRatio;
+    ctx.scale(devicePixelRatio, devicePixelRatio); // Scale the context for sharper rendering
+
+    // Clear the canvas before drawing
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw the wheel (existing logic)
     drawWheel(ctx, size);
