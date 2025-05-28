@@ -66,12 +66,14 @@ function App() {
       <Box as="main" minH="100vh">
         <Container maxW="container.xl" py={6}>
           <Heading
-            mb={8}
+            mt={10}
+            mb={10}
             textAlign="center"
             fontSize="3xl"
             fontWeight="bold"
             bgGradient="linear(to-r, blue.600, purple.500, pink.500)"
             bgClip="text"
+            color="black"
           >
             🎡 Wheel of Names
           </Heading>
