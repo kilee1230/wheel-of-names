@@ -128,7 +128,8 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
                 display="flex"
                 alignItems="center"
               >
-                <ShuffleIcon mr={2} /> Shuffle
+                <ShuffleIcon />
+                <Box display={{ base: "none", md: "block" }}>Shuffle</Box>
               </Button>
               <Button
                 bgGradient="linear(to-r, green.400, lime.500)"
@@ -144,8 +145,8 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
                 display="flex"
                 alignItems="center"
               >
-                {isAscending ? <SortAZIcon mr={2} /> : <SortZAIcon mr={2} />}{" "}
-                Sort
+                {isAscending ? <SortAZIcon /> : <SortZAIcon />}
+                <Box display={{ base: "none", md: "block" }}>Sort</Box>
               </Button>
               <Button
                 bgGradient="linear(to-r, red.400, pink.500)"
@@ -158,7 +159,8 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
                 display="flex"
                 alignItems="center"
               >
-                <DeleteIcon mr={2} /> Clear
+                <DeleteIcon />
+                <Box display={{ base: "none", md: "block" }}>Clear</Box>
               </Button>
             </Flex>
           </Box>
