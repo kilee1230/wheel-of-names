@@ -26,10 +26,6 @@ export const Wheel: React.FC<WheelProps> = ({
     darkMode: false,
   });
 
-  const spinBtnGradient = "linear(to-r, blue.500, purple.600)";
-
-  const pulseAnimation = "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite";
-
   const drawWheel = (ctx: CanvasRenderingContext2D, size: number) => {
     const numSlices = names.length;
     const arc = (2 * Math.PI) / numSlices;
@@ -178,9 +174,10 @@ export const Wheel: React.FC<WheelProps> = ({
 
     const animate = (now: number) => {
       const elapsed = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      // Use a more pronounced easing function for realistic deceleration
-      const easedProgress = 1 - Math.pow(1 - progress, 4); // Changed from cubic to quartic easing
+      const progress = Math.min(elapsed / duration, 1); // Ensure progress matches the intended duration
+
+      // Use a more realistic easing function for deceleration
+      const easedProgress = 1 - Math.pow(1 - progress, 3); // Changed to cubic easing for smoother animation
       const newAngle = angle + (finalAngle - angle) * easedProgress;
 
       setAngle(newAngle);
@@ -189,25 +186,14 @@ export const Wheel: React.FC<WheelProps> = ({
         requestAnimationFrame(animate);
       } else {
         setIsSpinning(false);
-        spinSound.stop();
+        setTimeout(() => spinSound.stop(), 200); // Delay stopping spinSound slightly
         winSound.play();
 
-        // Fixed winner calculation that correctly aligns with wheel segments
-        // First, get a normalized angle between 0 and 2π
+        // Calculate the winner
         const normalizedAngle =
           ((newAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-        // The pointer is at the top (π/2 from the positive x-axis)
-        // Calculate how far we've rotated from the reference position
         const segmentSize = (2 * Math.PI) / names.length;
-
-        // Since the wheel rotates clockwise and we want the segment at the top,
-        // we need to find which segment is under the pointer at the final position
-        // We add π/2 to account for the pointer at the top position
-        // (since 0 radians is at the 3 o'clock position)
         const offsetAngle = (normalizedAngle + Math.PI / 2) % (2 * Math.PI);
-
-        // Calculate which segment is at the pointer
-        // We use names.length - ... to adjust for clockwise rotation
         const winnerIndex =
           names.length -
           1 -
@@ -216,7 +202,6 @@ export const Wheel: React.FC<WheelProps> = ({
         const winner = names[winnerIndex];
         console.log(`Winner: ${winner} (index: ${winnerIndex})`);
 
-        // Call onSelectWinner callback if provided
         if (onSelectWinner) {
           onSelectWinner(winner);
         }
@@ -274,6 +259,18 @@ export const Wheel: React.FC<WheelProps> = ({
     document.addEventListener("touchend", handleMouseUp);
   };
 
+  const handleInteractionStart = (
+    event: React.MouseEvent | React.TouchEvent
+  ) => {
+    const isMobile = window.innerWidth <= 768; // Define mobile view threshold
+
+    if (isMobile) {
+      spinWheel(); // Click to spin in mobile view
+    } else {
+      handleMouseDown(event); // Drag to spin in web or iPad view
+    }
+  };
+
   return (
     <Box
       textAlign="center"
@@ -291,10 +288,10 @@ export const Wheel: React.FC<WheelProps> = ({
         display="flex"
         justifyContent="center"
         alignItems="center"
-        cursor="grab"
-        onMouseDown={handleMouseDown}
-        onTouchStart={handleMouseDown}
-        title="Grab and spin the wheel"
+        cursor={{ base: "pointer", md: "grab" }}
+        onMouseDown={handleInteractionStart}
+        onTouchStart={handleInteractionStart}
+        title="Spin the wheel"
       >
         <Box
           as="canvas"
