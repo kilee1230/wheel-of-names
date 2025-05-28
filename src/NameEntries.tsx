@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { Box, Button, Flex, Input, Heading, Text } from "@chakra-ui/react";
-import { Plus, X } from "lucide-react";
+import { Plus, X, ArrowUp, ArrowDown, Shuffle, Trash } from "lucide-react";
 
 const AddIcon = (props: any) => <Box as={Plus} {...props} />;
 const CloseIcon = (props: any) => <Box as={X} {...props} />;
+const SortAZIcon = (props: any) => <Box as={ArrowUp} {...props} />;
+const SortZAIcon = (props: any) => <Box as={ArrowDown} {...props} />;
+const ShuffleIcon = (props: any) => <Box as={Shuffle} {...props} />;
+const DeleteIcon = (props: any) => <Box as={Trash} {...props} />;
 
 interface NameEntriesProps {
   names: string[];
@@ -21,6 +25,7 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
   setShuffleNames,
 }) => {
   const [newName, setNewName] = useState<string>("");
+  const [isAscending, setIsAscending] = useState<boolean>(true);
 
   const addName = () => {
     if (newName.trim() !== "") {
@@ -78,20 +83,46 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
           </Button>
         </Flex>
         <Box p={4} borderWidth="1px" borderRadius="lg" boxShadow="sm" mb={6}>
-          {" "}
-          {/* Added margin-bottom */}
-          <Flex align="center">
-            <input
-              type="checkbox"
-              checked={shuffleNames}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setShuffleNames(e.target.checked)
-              }
-              style={{ marginRight: "12px" }}
-            />
-            <Text fontSize="sm" fontWeight="medium">
-              Shuffle before spinning
-            </Text>
+          <Flex align="center" justify="space-between">
+            <Button
+              bgGradient="linear(to-r, teal.400, blue.500)"
+              color="white"
+              _hover={{ bgGradient: "linear(to-r, teal.500, blue.600)" }}
+              onClick={() => {
+                const shuffled = [...names].sort(() => Math.random() - 0.5);
+                setNames(shuffled);
+              }}
+              display="flex"
+              alignItems="center"
+            >
+              <ShuffleIcon mr={2} /> Shuffle
+            </Button>
+            <Button
+              bgGradient="linear(to-r, green.400, lime.500)"
+              color="white"
+              _hover={{ bgGradient: "linear(to-r, green.500, lime.600)" }}
+              onClick={() => {
+                const sortedNames = isAscending
+                  ? [...names].sort((a, b) => a.localeCompare(b))
+                  : [...names].sort((a, b) => b.localeCompare(a));
+                setNames(sortedNames);
+                setIsAscending(!isAscending);
+              }}
+              display="flex"
+              alignItems="center"
+            >
+              {isAscending ? <SortAZIcon mr={2} /> : <SortZAIcon mr={2} />} Sort
+            </Button>
+            <Button
+              bgGradient="linear(to-r, red.400, pink.500)"
+              color="white"
+              _hover={{ bgGradient: "linear(to-r, red.500, pink.600)" }}
+              onClick={() => setNames([])}
+              display="flex"
+              alignItems="center"
+            >
+              <DeleteIcon mr={2} /> Clear
+            </Button>
           </Flex>
         </Box>
         <Box mt={6}>
