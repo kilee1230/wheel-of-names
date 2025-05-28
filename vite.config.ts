@@ -12,7 +12,7 @@ export default defineConfig({
       output: {
         assetFileNames: (assetInfo) => {
           if (assetInfo.name?.endsWith(".wav")) {
-            return "sounds/[name].[ext]";
+            return "./[name].[ext]"; // Update path to './' for sounds
           }
           return "assets/[name].[ext]";
         },
