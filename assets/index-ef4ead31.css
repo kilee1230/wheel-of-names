@@ -1,0 +1,1 @@
+@keyframes fireworks{0%{opacity:1;transform:scale(.5)}to{opacity:0;transform:scale(3)}}.winning-animation{position:relative}.winning-animation:after{content:"";position:absolute;top:50%;left:50%;width:150px;height:150px;background:radial-gradient(circle,#ffcc00,transparent);border-radius:50%;animation:fireworks 2s ease-out infinite;transform:translate(-50%,-50%)}
