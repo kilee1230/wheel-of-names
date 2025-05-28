@@ -1,21 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Box,
-  Button,
-  Flex,
-  Input,
-  Text,
-  DialogRoot,
-  DialogTrigger,
-  DialogBackdrop,
-  DialogPositioner,
-  DialogContent,
-  DialogCloseTrigger,
-  DialogHeader,
-  DialogTitle,
-  DialogBody,
-  DialogFooter,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
 import { Plus, X, ArrowUp, ArrowDown, Shuffle, Trash } from "lucide-react";
 import "./fireworks.css";
 
@@ -33,23 +17,6 @@ interface NameEntriesProps {
   shuffleNames: boolean;
   setShuffleNames: (shuffle: boolean) => void;
 }
-
-const winningAnimationClass = "winning-animation";
-
-const removeWinningAnimation = (element: HTMLElement | null) => {
-  if (element) {
-    element.classList.remove(winningAnimationClass);
-  }
-};
-
-const applyWinningAnimation = (element: HTMLElement | null) => {
-  if (element) {
-    element.classList.add("winning-animation");
-    setTimeout(() => {
-      element.classList.remove("winning-animation");
-    }, 3000); // Animation lasts 3 seconds
-  }
-};
 
 export const NameEntries: React.FC<NameEntriesProps> = ({
   names,
@@ -71,8 +38,6 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
 
   const [newName, setNewName] = useState<string>("");
   const [isAscending, setIsAscending] = useState<boolean>(true);
-  const [nameToRemove, setNameToRemove] = useState<string | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const storedNames = localStorage.getItem("wheel-names");
@@ -106,32 +71,9 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
     }
   };
 
-  const removeName = (index: number) => {
-    const updatedNames = names.filter((_, i) => i !== index);
+  const promptRemoveName = (nameToRemove: string) => {
+    const updatedNames = names.filter((name) => name !== nameToRemove);
     updateNames(updatedNames);
-  };
-
-  const onSelectWinner = (winner: string) => {
-    const winnerElement = document.querySelector(
-      `[data-name="${winner}"]`
-    ) as HTMLElement | null;
-    if (winnerElement) {
-      applyWinningAnimation(winnerElement);
-    }
-  };
-
-  const confirmRemoveName = () => {
-    if (nameToRemove) {
-      const updatedNames = names.filter((name) => name !== nameToRemove);
-      updateNames(updatedNames);
-      setNameToRemove(null);
-      setIsDialogOpen(false);
-    }
-  };
-
-  const promptRemoveName = (name: string) => {
-    setNameToRemove(name);
-    setIsDialogOpen(true);
   };
 
   return (
@@ -180,7 +122,7 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
                 color="white"
                 _hover={{ bgGradient: "linear(to-r, teal.500, blue.600)" }}
                 onClick={() => {
-                  const shuffled = [...names].sort(() => Math.random() - 0.5);
+                  const shuffled = [...names].sort(() => Math.random() - 0.9);
                   setNames(shuffled);
                 }}
                 display="flex"
@@ -248,29 +190,6 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
           </Box>
         </Box>
       </Box>
-
-      {/* Chakra UI Dialog for confirmation */}
-      <DialogRoot open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogTrigger />
-        <DialogBackdrop />
-        <DialogPositioner>
-          <DialogContent>
-            <DialogCloseTrigger />
-            <DialogHeader>
-              <DialogTitle>Remove Name</DialogTitle>
-            </DialogHeader>
-            <DialogBody>
-              Are you sure you want to remove "{nameToRemove}"?
-            </DialogBody>
-            <DialogFooter>
-              <Button onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-              <Button colorScheme="red" onClick={confirmRemoveName} ml={3}>
-                Remove
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </DialogPositioner>
-      </DialogRoot>
     </>
   );
 };
