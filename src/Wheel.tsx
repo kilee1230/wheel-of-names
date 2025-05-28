@@ -240,11 +240,6 @@ export const Wheel: React.FC<WheelProps> = ({
         if (onSelectWinner) {
           onSelectWinner(winner);
         }
-
-        if (settings.removeAfterWin) {
-          const newNames = names.filter((_, i) => i !== winnerIndex);
-          setNames(newNames);
-        }
       }
     };
 

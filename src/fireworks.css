@@ -1,0 +1,28 @@
+/* Fireworks animation styles */
+@keyframes fireworks {
+  0% {
+    opacity: 1;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(3); /* Increased size */
+  }
+}
+
+.winning-animation {
+  position: relative;
+}
+
+.winning-animation::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150px; /* Increased size */
+  height: 150px; /* Increased size */
+  background: radial-gradient(circle, #ffcc00, transparent);
+  border-radius: 50%;
+  animation: fireworks 2s ease-out infinite; /* Increased duration */
+  transform: translate(-50%, -50%);
+}
