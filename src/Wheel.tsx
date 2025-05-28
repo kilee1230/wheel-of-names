@@ -226,31 +226,52 @@ export const Wheel: React.FC<WheelProps> = ({
     requestAnimationFrame(animate);
   };
 
-  const importNames = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const imported = reader.result
-        ?.toString()
-        .split("\n")
-        .map((l) => l.trim())
-        .filter(Boolean);
-      if (imported && imported.length) setNames(imported);
-    };
-    reader.readAsText(file);
-  };
+  const handleMouseDown = (event: React.MouseEvent | React.TouchEvent) => {
+    const startAngle = angle;
+    const startX =
+      "touches" in event ? event.touches[0].clientX : event.clientX;
+    const startY =
+      "touches" in event ? event.touches[0].clientY : event.clientY;
 
-  const exportNames = () => {
-    const blob = new Blob([names.join("\n")], {
-      type: "text/plain;charset=utf-8",
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "names.txt";
-    a.click();
-    URL.revokeObjectURL(url);
+    let isPulled = false;
+
+    const handleMouseMove = (moveEvent: MouseEvent | TouchEvent) => {
+      const currentX =
+        "touches" in moveEvent
+          ? moveEvent.touches[0].clientX
+          : moveEvent.clientX;
+      const currentY =
+        "touches" in moveEvent
+          ? moveEvent.touches[0].clientY
+          : moveEvent.clientY;
+
+      const deltaX = currentX - startX;
+      const deltaY = currentY - startY;
+
+      const pullDistance = Math.sqrt(deltaX ** 2 + deltaY ** 2);
+      if (pullDistance > 20) {
+        isPulled = true;
+      }
+
+      const newAngle = startAngle + Math.atan2(deltaY, deltaX);
+      setAngle(newAngle);
+    };
+
+    const handleMouseUp = () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("touchmove", handleMouseMove);
+      document.removeEventListener("touchend", handleMouseUp);
+
+      if (isPulled) {
+        spinWheel();
+      }
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("touchmove", handleMouseMove);
+    document.addEventListener("touchend", handleMouseUp);
   };
 
   return (
@@ -267,12 +288,13 @@ export const Wheel: React.FC<WheelProps> = ({
         position="relative"
         width={{ base: "100%", md: "50%" }}
         height={{ base: "300px", md: "600px" }}
-        display="flex" // Use flex for centering
-        justifyContent="center" // Center horizontally
-        alignItems="center" // Center vertically
-        cursor={names.length < 2 ? "default" : "pointer"}
-        onClick={names.length < 2 ? undefined : spinWheel}
-        title={names.length < 2 ? "Add at least 2 names" : "Click to spin"}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        cursor="grab"
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleMouseDown}
+        title="Grab and spin the wheel"
       >
         <Box
           as="canvas"
