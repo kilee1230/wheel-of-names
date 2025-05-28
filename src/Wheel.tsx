@@ -156,26 +156,6 @@ export const Wheel: React.FC<WheelProps> = ({
     drawWheel(ctx, size);
   }, [names, angle, settings.darkMode]);
 
-  useEffect(() => {
-    const storedNames = localStorage.getItem("wheel-names");
-    if (storedNames) {
-      setNames(JSON.parse(storedNames));
-    }
-
-    const storedSettings = localStorage.getItem("wheel-settings");
-    if (storedSettings) {
-      setSettings(JSON.parse(storedSettings));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("wheel-names", JSON.stringify(names));
-  }, [names]);
-
-  useEffect(() => {
-    localStorage.setItem("wheel-settings", JSON.stringify(settings));
-  }, [settings]);
-
   const spinWheel = () => {
     winSound.stop();
     if (isSpinning || names.length < 2) return;

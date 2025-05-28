@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -34,8 +34,6 @@ interface NameEntriesProps {
   setShuffleNames: (shuffle: boolean) => void;
 }
 
-const defaultNames = ["Alice", "Bob", "Charlie", "Diana"];
-
 const winningAnimationClass = "winning-animation";
 
 const removeWinningAnimation = (element: HTMLElement | null) => {
@@ -60,23 +58,57 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
   shuffleNames,
   setShuffleNames,
 }) => {
+  const defaultNames = [
+    "Alice",
+    "Bob",
+    "Charlie",
+    "David",
+    "Emma",
+    "Frank",
+    "Grace",
+    "Henry",
+  ];
+
   const [newName, setNewName] = useState<string>("");
   const [isAscending, setIsAscending] = useState<boolean>(true);
   const [nameToRemove, setNameToRemove] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
+  useEffect(() => {
+    const storedNames = localStorage.getItem("wheel-names");
+    if (storedNames) {
+      try {
+        const parsedNames = JSON.parse(storedNames);
+        if (Array.isArray(parsedNames) && parsedNames.length > 0) {
+          setNames(parsedNames);
+        } else {
+          setNames(defaultNames); // Initialize with default names if stored data is invalid
+        }
+      } catch (error) {
+        console.error("Error parsing names from localStorage:", error);
+        setNames(defaultNames); // Fallback to default names on error
+      }
+    } else {
+      setNames(defaultNames); // Initialize with default names if no data is stored
+    }
+  }, []);
+
+  const updateNames = (updatedNames: string[]) => {
+    setNames(updatedNames);
+    localStorage.setItem("wheel-names", JSON.stringify(updatedNames));
+  };
+
   const addName = () => {
     if (newName.trim() !== "") {
       const updatedNames = [...names, newName.trim()];
-      setNames(updatedNames);
+      updateNames(updatedNames);
       setNewName("");
-      localStorage.setItem("wheel-names", JSON.stringify(updatedNames));
     }
   };
 
   const removeName = (index: number) => {
     const updatedNames = names.filter((_, i) => i !== index);
-    setNames(updatedNames);
+    updateNames(updatedNames);
   };
 
   const onSelectWinner = (winner: string) => {
@@ -91,8 +123,7 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
   const confirmRemoveName = () => {
     if (nameToRemove) {
       const updatedNames = names.filter((name) => name !== nameToRemove);
-      setNames(updatedNames);
-      localStorage.setItem("wheel-names", JSON.stringify(updatedNames));
+      updateNames(updatedNames);
       setNameToRemove(null);
       setIsDialogOpen(false);
     }
@@ -178,7 +209,10 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
                 bgGradient="linear(to-r, red.400, pink.500)"
                 color="white"
                 _hover={{ bgGradient: "linear(to-r, red.500, pink.600)" }}
-                onClick={() => setNames([])}
+                onClick={() => {
+                  setNames([]);
+                  updateNames([]);
+                }}
                 display="flex"
                 alignItems="center"
               >

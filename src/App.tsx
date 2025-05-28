@@ -35,7 +35,7 @@ function App() {
     "Grace",
     "Henry",
   ];
-  const [names, setNames] = useState<string[]>(defaultNames);
+  const [names, setNames] = useState<string[]>([]);
   const [shuffleNames, setShuffleNames] = useState<boolean>(false);
   const [winner, setWinner] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
