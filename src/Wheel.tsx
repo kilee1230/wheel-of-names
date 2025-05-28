@@ -9,8 +9,8 @@ interface WheelProps {
   onSelectWinner?: (winner: string) => void;
 }
 
-const spinSound = new Howl({ src: ["/sounds/spin.wav"] });
-const winSound = new Howl({ src: ["/sounds/win.wav"] });
+const spinSound = new Howl({ src: ["/wheel-of-names/sounds/spin.wav"] });
+const winSound = new Howl({ src: ["/wheel-of-names/sounds/win.wav"] });
 
 export const Wheel: React.FC<WheelProps> = ({
   names,
