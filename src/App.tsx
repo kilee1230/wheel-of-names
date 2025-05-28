@@ -2,6 +2,7 @@ import { StrictMode, useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { Wheel } from "./Wheel";
 import { NameEntries } from "./NameEntries";
+import "./fireworks.css"; // Import fireworks styles
 import {
   ChakraProvider,
   Box,
@@ -9,7 +10,6 @@ import {
   Heading,
   Flex,
   defaultSystem,
-  Dialog,
   DialogRoot,
   DialogTrigger,
   DialogBackdrop,
@@ -24,17 +24,6 @@ import {
 } from "@chakra-ui/react";
 
 function App() {
-  // Default names
-  const defaultNames = [
-    "Alice",
-    "Bob",
-    "Charlie",
-    "David",
-    "Emma",
-    "Frank",
-    "Grace",
-    "Henry",
-  ];
   const [names, setNames] = useState<string[]>([]);
   const [shuffleNames, setShuffleNames] = useState<boolean>(false);
   const [winner, setWinner] = useState<string | null>(null);
@@ -44,14 +33,37 @@ function App() {
     if (winner) {
       const updatedNames = names.filter((name) => name !== winner);
       setNames(updatedNames);
-      setWinner(null); // Clear the winner after removal
+      setWinner(null);
       setIsDialogOpen(false);
     }
   };
 
   const announceWinner = (name: string) => {
     setWinner(name);
-    setIsDialogOpen(true); // Open the dialog without modifying the names
+    setIsDialogOpen(true);
+
+    // Create fireworks container
+    const pyroContainer = document.createElement("div");
+    pyroContainer.className = "pyro";
+
+    // Create before and after elements
+    const beforeElement = document.createElement("div");
+    beforeElement.className = "before";
+    const afterElement = document.createElement("div");
+    afterElement.className = "after";
+
+    pyroContainer.appendChild(beforeElement);
+    pyroContainer.appendChild(afterElement);
+
+    // Append to the DOM
+    document.body.appendChild(pyroContainer);
+
+    // Remove after animation
+    setTimeout(() => {
+      if (document.body.contains(pyroContainer)) {
+        document.body.removeChild(pyroContainer);
+      }
+    }, 4000); // Remove fireworks after 5 seconds
   };
 
   const handleShuffle = () => {
@@ -97,10 +109,9 @@ function App() {
               />
             </Box>
           </Flex>
-        </Container>
+        </Container>{" "}
       </Box>
 
-      {/* Chakra UI Dialog for winner announcement */}
       <DialogRoot open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger />
         <DialogBackdrop />

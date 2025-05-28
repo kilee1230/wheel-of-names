@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
 import { Plus, X, ArrowUp, ArrowDown, Shuffle, Trash } from "lucide-react";
-import "./fireworks.css";
 
 const AddIcon = (props: any) => <Box as={Plus} {...props} />;
 const CloseIcon = (props: any) => <Box as={X} {...props} />;
