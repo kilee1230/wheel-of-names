@@ -1,8 +1,6 @@
 import { StrictMode, useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { Wheel } from "./Wheel";
-import { NameEntries } from "./NameEntries";
-import "./fireworks.css"; // Import fireworks styles
+
 import {
   ChakraProvider,
   Box,
@@ -22,6 +20,12 @@ import {
   DialogFooter,
   Button,
 } from "@chakra-ui/react";
+
+import { Wheel } from "./Wheel";
+import { NameEntries } from "./NameEntries";
+
+import "./index.css";
+import "./fireworks.css";
 
 function App() {
   const [names, setNames] = useState<string[]>([]);
@@ -132,7 +136,14 @@ function App() {
               >
                 Close
               </Button>
-              <Button colorScheme="red" onClick={removeWinnerFromWheel} ml={3}>
+              <Button
+                bg="#EAEAEA"
+                color="#333333"
+                borderRadius="4px"
+                _hover={{ bg: "#CCCCCC" }}
+                onClick={removeWinnerFromWheel}
+                ml={3}
+              >
                 Remove
               </Button>
             </DialogFooter>

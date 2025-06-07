@@ -94,9 +94,10 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
         <Box>
           <Flex align="center" justify="start" gap={2}>
             <Button
-              bgGradient="linear(to-r, teal.400, blue.500)"
-              color="white"
-              _hover={{ bgGradient: "linear(to-r, teal.500, blue.600)" }}
+              bg="#EAEAEA"
+              color="#333333"
+              borderRadius="4px"
+              _hover={{ bg: "#CCCCCC" }}
               onClick={() => {
                 const shuffled = [...names].sort(() => Math.random() - 0.9);
                 updateNames(shuffled);
@@ -104,13 +105,16 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
               display="flex"
               alignItems="center"
             >
-              <ShuffleIcon />
-              <Box display={{ base: "none", md: "block" }}>Shuffle</Box>
+              <ShuffleIcon color="#888888" />
+              <Box display={{ base: "none", md: "block" }} color="#333333">
+                Shuffle
+              </Box>
             </Button>
             <Button
-              bgGradient="linear(to-r, green.400, lime.500)"
-              color="white"
-              _hover={{ bgGradient: "linear(to-r, green.500, lime.600)" }}
+              bg="#EAEAEA"
+              color="#333333"
+              borderRadius="4px"
+              _hover={{ bg: "#CCCCCC" }}
               onClick={() => {
                 const sortedNames = isAscending
                   ? [...names].sort((a, b) => a.localeCompare(b))
@@ -121,21 +125,30 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
               display="flex"
               alignItems="center"
             >
-              {isAscending ? <SortAZIcon /> : <SortZAIcon />}
-              <Box display={{ base: "none", md: "block" }}>Sort</Box>
+              {isAscending ? (
+                <SortAZIcon color="#888888" />
+              ) : (
+                <SortZAIcon color="#888888" />
+              )}
+              <Box display={{ base: "none", md: "block" }} color="#333333">
+                Sort
+              </Box>
             </Button>
             <Button
-              bgGradient="linear(to-r, red.400, pink.500)"
-              color="white"
-              _hover={{ bgGradient: "linear(to-r, red.500, pink.600)" }}
+              bg="#EAEAEA"
+              color="#333333"
+              borderRadius="4px"
+              _hover={{ bg: "#CCCCCC" }}
               onClick={() => {
                 updateNames([]);
               }}
               display="flex"
               alignItems="center"
             >
-              <DeleteIcon />
-              <Box display={{ base: "none", md: "block" }}>Clear</Box>
+              <DeleteIcon color="#888888" />
+              <Box display={{ base: "none", md: "block" }} color="#333333">
+                Clear
+              </Box>
             </Button>
           </Flex>
         </Box>
@@ -148,9 +161,9 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
               height: "auto",
               minHeight: "500px",
               resize: "none",
-              backgroundColor: "#f0f8ff",
-              border: "1px solid #ccc",
-              borderRadius: "8px",
+              backgroundColor: "#F8F7F3",
+              border: "1px solid #CCCCCC",
+              borderRadius: "4px",
               padding: "10px",
               fontFamily: "Arial, sans-serif",
               fontSize: "14px",
