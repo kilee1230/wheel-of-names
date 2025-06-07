@@ -92,13 +92,11 @@ export const Wheel: React.FC<WheelProps> = ({
       ctx.fillStyle = settings.darkMode ? "white" : "black";
       ctx.textAlign = "center";
 
-      // Apply truncation logic based on name length
+      // Apply truncation logic based on the number of names
       let displayName = name;
-
-      if (name.length > 6) {
-        displayName = name.slice(0, 10) + "...";
-      } else if (name.length > 10) {
-        displayName = name.slice(0, 3) + "...";
+      const maxChars = Math.max(3, Math.floor(30 / numSlices)); // Dynamically calculate max characters based on number of slices
+      if (name.length > maxChars) {
+        displayName = name.slice(0, maxChars) + "...";
       }
 
       ctx.fillText(displayName, 0, 0);
