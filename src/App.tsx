@@ -33,6 +33,14 @@ function App() {
     if (winner) {
       const updatedNames = names.filter((name) => name !== winner);
       setNames(updatedNames);
+
+      localStorage.setItem("wheel-names", JSON.stringify(updatedNames));
+
+      // Update the textarea content
+      const textarea = document.querySelector("textarea");
+      if (textarea) {
+        textarea.value = updatedNames.join("\n");
+      }
       setWinner(null);
       setIsDialogOpen(false);
     }
@@ -100,13 +108,7 @@ function App() {
               />
             </Box>
             <Box width={{ base: "100%", md: "40%" }}>
-              <NameEntries
-                names={names}
-                setNames={setNames}
-                winner={winner}
-                shuffleNames={shuffleNames}
-                setShuffleNames={setShuffleNames}
-              />
+              <NameEntries names={names} setNames={setNames} />
             </Box>
           </Flex>
         </Container>{" "}
