@@ -31,6 +31,7 @@ export const Wheel: React.FC<WheelProps> = ({
     removeAfterWin: true,
     darkMode: false,
   });
+  const slowSpinIntervalRef = useRef<number | null>(null);
 
   const drawWheel = (ctx: CanvasRenderingContext2D, size: number) => {
     const numSlices = names.length;
@@ -91,10 +92,13 @@ export const Wheel: React.FC<WheelProps> = ({
       ctx.fillStyle = settings.darkMode ? "white" : "black";
       ctx.textAlign = "center";
 
-      // Truncate name if too long
+      // Apply truncation logic based on name length
       let displayName = name;
-      if (name.length > 15) {
-        displayName = name.substring(0, 13) + "...";
+
+      if (name.length > 6) {
+        displayName = name.slice(0, 10) + "...";
+      } else if (name.length > 10) {
+        displayName = name.slice(0, 3) + "...";
       }
 
       ctx.fillText(displayName, 0, 0);
@@ -166,9 +170,27 @@ export const Wheel: React.FC<WheelProps> = ({
     drawWheel(ctx, size);
   }, [names, angle, settings.darkMode]);
 
+  useEffect(() => {
+    slowSpinIntervalRef.current = setInterval(() => {
+      setAngle((prevAngle) => prevAngle + 0.01); // Increment angle slowly
+    }, 50); // Adjust interval for smoothness
+
+    return () => {
+      if (slowSpinIntervalRef.current) {
+        clearInterval(slowSpinIntervalRef.current);
+      }
+    };
+  }, []);
+
   const spinWheel = () => {
     winSound.stop();
     if (isSpinning || names.length < 2) return;
+
+    // Stop auto-spin
+    if (slowSpinIntervalRef.current) {
+      clearInterval(slowSpinIntervalRef.current);
+      slowSpinIntervalRef.current = null;
+    }
 
     // Call shuffle function if provided
     if (onShuffle) {
@@ -179,10 +201,12 @@ export const Wheel: React.FC<WheelProps> = ({
     spinSound.play();
 
     const duration = 5500; // Slightly longer duration
-    // Make sure wheel stops at the middle of a segment for clarity
     const segmentSize = (2 * Math.PI) / names.length;
-    const randomOffset = Math.random() * segmentSize * 0.8 + segmentSize * 0.1; // Stop within middle 80% of a segment
-    const finalAngle = angle + 12 * Math.PI + randomOffset;
+
+    // Randomize the starting angle for true randomness
+    const startingAngle = Math.random() * 2 * Math.PI;
+    const randomOffset = Math.random() * segmentSize; // Fully random offset within a segment
+    const finalAngle = startingAngle + 12 * Math.PI + randomOffset;
 
     const start = performance.now();
 
@@ -192,7 +216,8 @@ export const Wheel: React.FC<WheelProps> = ({
 
       // Use a more realistic easing function for deceleration
       const easedProgress = 1 - Math.pow(1 - progress, 3); // Changed to cubic easing for smoother animation
-      const newAngle = angle + (finalAngle - angle) * easedProgress;
+      const newAngle =
+        startingAngle + (finalAngle - startingAngle) * easedProgress;
 
       setAngle(newAngle);
 
@@ -206,7 +231,6 @@ export const Wheel: React.FC<WheelProps> = ({
         // Calculate the winner
         const normalizedAngle =
           ((newAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-        const segmentSize = (2 * Math.PI) / names.length;
         const offsetAngle = (normalizedAngle + Math.PI / 2) % (2 * Math.PI);
         const winnerIndex =
           names.length -
@@ -219,6 +243,18 @@ export const Wheel: React.FC<WheelProps> = ({
         if (onSelectWinner) {
           onSelectWinner(winner);
         }
+
+        // Reset angle to avoid bias in subsequent spins
+        setAngle(normalizedAngle);
+
+        // Stop auto-spin after announcing the winner
+        if (slowSpinIntervalRef.current) {
+          clearInterval(slowSpinIntervalRef.current);
+          slowSpinIntervalRef.current = null;
+        }
+
+        // Stop spin sound immediately after the wheel stops
+        spinSound.stop();
       }
     };
 
@@ -226,6 +262,12 @@ export const Wheel: React.FC<WheelProps> = ({
   };
 
   const handleMouseDown = (event: React.MouseEvent | React.TouchEvent) => {
+    // Stop auto-spin when the wheel is grabbed
+    if (slowSpinIntervalRef.current) {
+      clearInterval(slowSpinIntervalRef.current);
+      slowSpinIntervalRef.current = null;
+    }
+
     const startAngle = angle;
     const startX =
       "touches" in event ? event.touches[0].clientX : event.clientX;
