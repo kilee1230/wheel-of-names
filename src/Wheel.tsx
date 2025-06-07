@@ -84,17 +84,20 @@ export const Wheel: React.FC<WheelProps> = ({
       ctx.translate(wheelRadius / 2 + 10, 0);
       ctx.rotate(Math.PI / 2);
 
+      // Rotate text by another 90 degrees
+      ctx.rotate(Math.PI / 2);
+
       const fontSize =
         window.innerWidth > 768
-          ? Math.min(20, 200 / Math.max(5, numSlices))
-          : Math.min(16, 180 / Math.max(5, numSlices));
+          ? Math.min(24, 240 / Math.max(5, numSlices)) // Larger font size for desktop
+          : Math.min(16, 200 / Math.max(5, numSlices)); // Smaller font size for mobile
       ctx.font = `${fontSize}px Arial, sans-serif`;
       ctx.fillStyle = settings.darkMode ? "white" : "black";
       ctx.textAlign = "center";
 
       // Apply truncation logic based on the number of names
       let displayName = name;
-      const maxChars = Math.max(3, Math.floor(30 / numSlices)); // Dynamically calculate max characters based on number of slices
+      const maxChars = window.innerWidth > 768 ? 17 : 8; // Set maximum characters to 17 for desktop and 12 for mobile
       if (name.length > maxChars) {
         displayName = name.slice(0, maxChars) + "...";
       }
