@@ -1,4 +1,4 @@
-import { StrictMode, useState, useEffect } from "react";
+import { StrictMode, useState, useEffect, lazy } from "react";
 import { createRoot } from "react-dom/client";
 
 import {
@@ -21,8 +21,12 @@ import {
   Button,
 } from "@chakra-ui/react";
 
-import { Wheel } from "./Wheel";
-import { NameEntries } from "./NameEntries";
+const LazyWheel = lazy(() =>
+  import("./Wheel").then((module) => ({ default: module.Wheel }))
+);
+const LazyNameEntries = lazy(() =>
+  import("./NameEntries").then((module) => ({ default: module.NameEntries }))
+);
 
 import "./index.css";
 import "./fireworks.css";
@@ -104,15 +108,15 @@ function App() {
 
           <Flex width="full" direction={{ base: "column", md: "row" }} gap={4}>
             <Box width={{ base: "100%", md: "60%" }} mb={{ base: 6, md: 0 }}>
-              <Wheel
+              <LazyWheel
                 names={names}
                 setNames={setNames}
                 onShuffle={handleShuffle}
-                onSelectWinner={(name) => announceWinner(name)}
+                onSelectWinner={(name: string) => announceWinner(name)}
               />
             </Box>
             <Box width={{ base: "100%", md: "40%" }}>
-              <NameEntries names={names} setNames={setNames} />
+              <LazyNameEntries names={names} setNames={setNames} />
             </Box>
           </Flex>
         </Container>{" "}
