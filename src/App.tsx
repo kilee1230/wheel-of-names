@@ -32,10 +32,17 @@ import "./index.css";
 import "./fireworks.css";
 
 function App() {
+  const initialHeaderText =
+    localStorage.getItem("header-text") || "🎡 Wheel of Names";
   const [names, setNames] = useState<string[]>([]);
   const [shuffleNames, setShuffleNames] = useState<boolean>(false);
   const [winner, setWinner] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [headerText, setHeaderText] = useState<string>(initialHeaderText);
+
+  useEffect(() => {
+    updateHeaderText(initialHeaderText);
+  }, []);
 
   const removeWinnerFromWheel = () => {
     if (winner) {
@@ -89,6 +96,17 @@ function App() {
     }
   };
 
+  const handleHeaderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newHeaderText = e.target.value;
+    updateHeaderText(newHeaderText);
+  };
+
+  const updateHeaderText = (newHeaderText: string) => {
+    setHeaderText(newHeaderText);
+    localStorage.setItem("header-text", newHeaderText);
+    document.title = newHeaderText;
+  };
+
   return (
     <>
       <Box as="main" minH="100vh">
@@ -103,7 +121,7 @@ function App() {
             bgClip="text"
             color="black"
           >
-            🎡 Wheel of Names
+            {headerText}
           </Heading>
 
           <Flex width="full" direction={{ base: "column", md: "row" }} gap={4}>
@@ -116,10 +134,15 @@ function App() {
               />
             </Box>
             <Box width={{ base: "100%", md: "40%" }}>
-              <LazyNameEntries names={names} setNames={setNames} />
+              <LazyNameEntries
+                names={names}
+                setNames={setNames}
+                headerText={headerText}
+                setHeaderText={handleHeaderChange}
+              />
             </Box>
           </Flex>
-        </Container>{" "}
+        </Container>
       </Box>
 
       <DialogRoot open={isDialogOpen} onOpenChange={setIsDialogOpen}>

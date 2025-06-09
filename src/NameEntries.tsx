@@ -10,11 +10,38 @@ const DeleteIcon = (props: any) => <Box as={Trash} {...props} />;
 interface NameEntriesProps {
   names: string[];
   setNames: (names: string[]) => void;
+  headerText: string;
+  setHeaderText: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
+
+export const EditableHeader: React.FC<{
+  headerText: string;
+  setHeaderText: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}> = ({ headerText, setHeaderText }) => (
+  <Box textAlign="center" mb={6}>
+    <input
+      type="text"
+      value={headerText}
+      onChange={setHeaderText}
+      style={{
+        padding: "8px",
+        backgroundColor: "#F8F7F3",
+        border: "1px solid #CCCCCC",
+        borderRadius: "4px",
+        fontFamily: "Arial, sans-serif",
+        fontSize: "14px",
+        width: "100%",
+      }}
+      placeholder="Edit header text"
+    />
+  </Box>
+);
 
 export const NameEntries: React.FC<NameEntriesProps> = ({
   names,
   setNames,
+  headerText,
+  setHeaderText,
 }) => {
   const defaultNames = [
     "Alice",
@@ -27,9 +54,7 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
     "Henry",
   ];
 
-  const [newName, setNewName] = useState<string>("");
   const [isAscending, setIsAscending] = useState<boolean>(true);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const storedNames = localStorage.getItem("wheel-names");
@@ -91,6 +116,8 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
         height="full"
         p={6}
       >
+        <EditableHeader headerText={headerText} setHeaderText={setHeaderText} />
+
         <Box>
           <Flex align="center" justify="start" gap={2}>
             <Button
