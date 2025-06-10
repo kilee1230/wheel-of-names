@@ -101,6 +101,25 @@ function App() {
     updateHeaderText(newHeaderText);
   };
 
+  const pickRandomHeader = () => {
+    const randomHeaders = [
+      "🎯 Today’s Chosen One: Luck or Chaos?",
+      "🐸 Fate Has Spoken (Kinda)",
+      "🤡 Wheel of Fortunate-ish",
+      "🍕 Spin It to Win… Bragging Rights",
+      "🦄 The Universe Decides (No Refunds)",
+      "🫣 One Spin to Rule Them All",
+      "🎲 Destiny? Or Just Dumb Luck?",
+      "🐔 Cluck of the Draw",
+      "🛸 Beamed Up by Luck Today?",
+      "🧃 Winner Gets Nothing But Vibes",
+    ];
+
+    const randomHeader =
+      randomHeaders[Math.floor(Math.random() * randomHeaders.length)];
+    updateHeaderText(randomHeader);
+  };
+
   const updateHeaderText = (newHeaderText: string) => {
     setHeaderText(newHeaderText);
     localStorage.setItem("header-text", newHeaderText);
@@ -139,6 +158,7 @@ function App() {
                 setNames={setNames}
                 headerText={headerText}
                 setHeaderText={handleHeaderChange}
+                pickRandomHeader={pickRandomHeader}
               />
             </Box>
           </Flex>

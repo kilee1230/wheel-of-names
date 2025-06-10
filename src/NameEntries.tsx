@@ -1,47 +1,64 @@
 import { useState, useEffect, useRef } from "react";
 import { Box, Button, Flex } from "@chakra-ui/react";
-import { ArrowUp, ArrowDown, Shuffle, Trash } from "lucide-react";
+import { ArrowUp, ArrowDown, Shuffle, Trash, RefreshCcw } from "lucide-react";
 
 const SortAZIcon = (props: any) => <Box as={ArrowUp} {...props} />;
 const SortZAIcon = (props: any) => <Box as={ArrowDown} {...props} />;
 const ShuffleIcon = (props: any) => <Box as={Shuffle} {...props} />;
 const DeleteIcon = (props: any) => <Box as={Trash} {...props} />;
+const RandomIcon = (props: any) => <Box as={RefreshCcw} {...props} />;
 
 interface NameEntriesProps {
   names: string[];
   setNames: (names: string[]) => void;
   headerText: string;
   setHeaderText: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  pickRandomHeader: () => void;
 }
 
 export const EditableHeader: React.FC<{
   headerText: string;
   setHeaderText: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}> = ({ headerText, setHeaderText }) => (
-  <Box textAlign="center" mb={6}>
-    <input
-      type="text"
-      value={headerText}
-      onChange={setHeaderText}
-      style={{
-        padding: "8px",
-        backgroundColor: "#F8F7F3",
-        border: "1px solid #CCCCCC",
-        borderRadius: "4px",
-        fontFamily: "Arial, sans-serif",
-        fontSize: "14px",
-        width: "100%",
-      }}
-      placeholder="Edit header text"
-    />
-  </Box>
-);
+  pickRandomHeader: () => void;
+}> = ({ headerText, setHeaderText, pickRandomHeader }) => {
+  return (
+    <Box textAlign="center" mb={6}>
+      <Flex align="center" justify="start" gap={2}>
+        <input
+          type="text"
+          value={headerText}
+          onChange={setHeaderText}
+          style={{
+            padding: "8px",
+            backgroundColor: "#F8F7F3",
+            border: "1px solid #CCCCCC",
+            borderRadius: "4px",
+            fontFamily: "Arial, sans-serif",
+            fontSize: "14px",
+            width: "80%",
+          }}
+          placeholder="Edit header text"
+        />
+        <Button
+          bg="#EAEAEA"
+          color="#333333"
+          borderRadius="4px"
+          _hover={{ bg: "#CCCCCC" }}
+          onClick={pickRandomHeader}
+        >
+          <RandomIcon color="#888888" />
+        </Button>
+      </Flex>
+    </Box>
+  );
+};
 
 export const NameEntries: React.FC<NameEntriesProps> = ({
   names,
   setNames,
   headerText,
   setHeaderText,
+  pickRandomHeader,
 }) => {
   const defaultNames = [
     "Alice",
@@ -116,7 +133,11 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
         height="full"
         p={6}
       >
-        <EditableHeader headerText={headerText} setHeaderText={setHeaderText} />
+        <EditableHeader
+          headerText={headerText}
+          setHeaderText={setHeaderText}
+          pickRandomHeader={pickRandomHeader}
+        />
 
         <Box>
           <Flex align="center" justify="start" gap={2}>
