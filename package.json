@@ -1,27 +1,28 @@
 {
   "name": "wheel-of-names",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@chakra-ui/react": "^3.19.1",
+    "@chakra-ui/react": "^3.22.0",
     "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
-    "framer-motion": "^12.15.0",
+    "@emotion/styled": "^11.14.1",
+    "framer-motion": "^12.23.6",
     "howler": "^2.2.3",
-    "lucide-react": "^0.511.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "lucide-react": "^0.525.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
     "@types/howler": "^2.2.12",
-    "@types/react": "^19.1.5",
-    "@types/react-dom": "^19.1.5",
-    "@vitejs/plugin-react": "^4.5.0",
-    "typescript": "^4.4.4",
-    "vite": "^4.0.0"
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.7.0",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.5"
   }
 }

@@ -94,7 +94,7 @@ export const NameEntries: React.FC<NameEntriesProps> = ({
         setNames(defaultNames); // Fallback to default names on error
       }
     } else {
-      setNames(defaultNames); // Initialize with default names if no data is stored
+      updateNames(defaultNames); // Initialize with default names if no data is stored
     }
   }, []);
 
