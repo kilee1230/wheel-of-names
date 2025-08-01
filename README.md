@@ -1,5 +1,7 @@
 # Wheel of Names
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/kilee1230/wheel-of-names)
+
 ## Overview
 
 The Wheel of Names is a fun and interactive web application that allows users to input names and spin a wheel to randomly select a winner. It is built using React and Chakra UI for a modern and responsive design.
